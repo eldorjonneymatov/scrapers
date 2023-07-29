@@ -9,25 +9,32 @@ from selenium.webdriver.common.by import By
 
 class PostScrapper:
     def __init__(self, username, required_posts=12):
-        self.required_posts = required_posts
-        self.username = username
-        self.post_count = 0
-        self.post_urls = []
-        self.image_urls = []
-        # driver
-        self.driver = webdriver.Chrome()
-        self.driver.get('http://www.instagram.com')
-        # login
-        self.login()
-        # avoid notifications
-        self.avoid_notifications()
-        # user`s all posts page
-        self.get_all_posts_page()
-        # scroll down to bottom
-        self.scroll_to_bottom()
-        # save data
-        self.write_to_json()
-        self.driver.close()
+        try:
+            self.required_posts = required_posts
+            self.username = username
+            self.post_count = 0
+            self.post_urls = []
+            self.image_urls = []
+            # driver
+            self.driver = webdriver.Chrome()
+            self.driver.get('http://www.instagram.com')
+            # login
+            self.login()
+            # avoid notifications
+            self.avoid_notifications()
+            # user`s all posts page
+            self.get_all_posts_page()
+            # first scraping
+            completed = self.bs_scrapper()
+            if completed:
+                return
+            # scroll down to bottom
+            self.scroll_to_bottom()
+            # save data
+            self.write_to_json()
+            self.driver.close()
+        except Exception as e:
+            print(e)
     
 
     def login(self):
@@ -112,4 +119,4 @@ class PostScrapper:
                 }, f)
 
 
-ps = PostScrapper('jamalmusiala10', 5)
+ps = PostScrapper('example_username', 10)
